@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
 	"strconv"
@@ -89,6 +90,7 @@ func (a bookAPI) buyBook(writer http.ResponseWriter, request *http.Request) {
 	number, err := a.data.BuyBook(nameOfBook)
 	if err != nil {
 		_, err := writer.Write([]byte(err.Error()))
+		logrus.Info("ERROR", http.StatusInternalServerError)
 		if err != nil {
 			log.Println(err)
 			writer.WriteHeader(http.StatusInternalServerError)
@@ -97,6 +99,7 @@ func (a bookAPI) buyBook(writer http.ResponseWriter, request *http.Request) {
 		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	logrus.Info("CREAT", http.StatusCreated)
 	writer.WriteHeader(http.StatusCreated)
 	writer.Write([]byte(fmt.Sprintf("You buy a book and we have %v books", number)))
 }

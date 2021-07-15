@@ -18,7 +18,7 @@ type Book struct {
 	YearOfPublication string // year of publication of the book
 	BookVolume        int    // book volume
 	Number            int    // number of book
-	Price 			  int
+	Price             int
 }
 
 //ReadAll output all data with table books
@@ -68,7 +68,6 @@ func (B BookData) Add(book Book) (int, error) {
 	return book.BookId, nil
 }
 
-
 //Update update number of books by the id
 func (B BookData) Update(id int, value int) error {
 	result := B.db.Table(dbConst.Books).Where(dbConst.BookId, id).Update("number", value)
@@ -89,7 +88,7 @@ func (B BookData) Delete(id int) error {
 
 type sellBook struct {
 	Number int
-	Price int
+	Price  int
 }
 
 type money struct {
@@ -106,7 +105,7 @@ func (B BookData) BuyBook(name string) (int, error) {
 			tx.Rollback()
 			return result.Error
 		}
-		result = tx.Table(dbConst.Books).Select("number, price").Where("books.name_of_book = 'Dubrovsky'").Find(&bookSale)
+		result = tx.Table(dbConst.Books).Select("number, price").Where("books.name_of_book = ?", name).Find(&bookSale)
 		if bookSale.Price > moneyUser.Money {
 			tx.Rollback()
 			return fmt.Errorf("not enough mooney")
@@ -119,12 +118,12 @@ func (B BookData) BuyBook(name string) (int, error) {
 			tx.Rollback()
 			return result.Error
 		}
-		result = tx.Table("userMoney").Where("money = ?", moneyUser.Money).Update("money", moneyUser.Money - bookSale.Price)
+		result = tx.Table("userMoney").Where("money = ?", moneyUser.Money).Update("money", moneyUser.Money-bookSale.Price)
 		if result.Error != nil {
 			tx.Rollback()
 			return result.Error
 		}
-		result = tx.Table(dbConst.Books).Where("books.name_of_book = ?", name).Update("number", bookSale.Number - 1)
+		result = tx.Table(dbConst.Books).Where("books.name_of_book = ?", name).Update("number", bookSale.Number-1)
 		if result = tx.Commit(); result.Error != nil {
 			tx.Rollback()
 			return fmt.Errorf("your transaction has been canceled and your money is saved, because %v", result.Error)
@@ -139,8 +138,3 @@ func (B BookData) BuyBook(name string) (int, error) {
 	logrus.Info("Deal hab been completed successfully!")
 	return bookSale.Number, nil
 }
-
-func checkBook() {
-
-}
-
