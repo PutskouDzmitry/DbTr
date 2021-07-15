@@ -7,10 +7,9 @@ import (
 
 //Result this is necessary to read data into the database via a join
 type Result struct {
-	BookId int
-	NameOfBook string
+	BookId          int
+	NameOfBook      string
 	NameOfPublisher string
-
 }
 
 //String output info in console

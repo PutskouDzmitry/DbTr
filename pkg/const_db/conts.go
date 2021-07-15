@@ -3,7 +3,7 @@ package const_db
 const (
 	//Const for default for initialize connection
 	ServerPort = "8080"
-	Host       = "localhost"
+	Host       = "postgres"
 	Port       = "5432"
 	User       = "postgres"
 	DbName     = "postgres"
