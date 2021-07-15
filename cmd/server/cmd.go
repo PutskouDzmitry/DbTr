@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/PutskouDzmitry/DbTr/pkg/api"
 	"github.com/PutskouDzmitry/DbTr/pkg/const_db"
@@ -24,7 +25,7 @@ var (
 	portServer = os.Getenv("SERVER_OUT_PORT")
 )
 
-func init() {
+func initialization() {
 	if host == "" {
 		host = const_db.Host
 	}
@@ -46,10 +47,11 @@ func init() {
 	if portServer == "" {
 		portServer = "8081"
 	}
+	time.Sleep(2 * time.Second)
 }
 
 func main() {
-	fmt.Println(host, port, user, dbname)
+	initialization()
 	conn, err := db.GetConnection(host, port, user, dbname, password, sslmode)
 	if err != nil {
 		log.Fatalf("can't connect to database, error: %v", err)
