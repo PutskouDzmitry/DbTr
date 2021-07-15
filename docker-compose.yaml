@@ -1,0 +1,18 @@
+version: '3.3'
+
+services:
+  db-book:
+    image: kvarc/db:latest
+    networks:
+      - book-network
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=postgres
+    ports:
+      - 5432:5432
+    container_name: db-book
+
+networks:
+  book-network:
+    name: book-network
