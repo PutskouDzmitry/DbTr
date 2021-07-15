@@ -2,17 +2,20 @@ package main
 
 import (
 	"fmt"
+	"github.com/PutskouDzmitry/DbTr/pkg/api"
+	"github.com/PutskouDzmitry/DbTr/pkg/const_db"
+	"github.com/PutskouDzmitry/DbTr/pkg/data"
+	"github.com/PutskouDzmitry/DbTr/pkg/db"
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"log"
 	"net"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/PutskouDzmitry/DbTr/pkg/api"
-	"github.com/PutskouDzmitry/DbTr/pkg/const_db"
-	"github.com/PutskouDzmitry/DbTr/pkg/data"
-	"github.com/PutskouDzmitry/DbTr/pkg/db"
+	"github.com/cenkalti/backoff"
 )
 
 var (
@@ -47,14 +50,27 @@ func initialization() {
 	if portServer == "" {
 		portServer = "8081"
 	}
-	time.Sleep(2 * time.Second)
+	//time.Sleep(2 * time.Second)
 }
 
 func main() {
 	initialization()
-	conn, err := db.GetConnection(host, port, user, dbname, password, sslmode)
+	var conn *gorm.DB
+	back := config()
+	var err error
+	for {
+		timeWait := back.NextBackOff()
+		time.Sleep(timeWait)
+		conn, err = db.GetConnection(host, port, user, dbname, password, sslmode)
+		if err != nil {
+			logrus.Error("we wait connect to redis, time: ", timeWait)
+		} else {
+			break
+		}
+	}
+	conn, err = db.GetConnection(host, port, user, dbname, password, sslmode)
 	if err != nil {
-		log.Fatalf("can't connect to database, error: %v", err)
+		log.Fatalf("can't connect to database, error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: %v", err)
 	}
 	// 2. create router that allows to set routes
 	r := mux.NewRouter()
@@ -72,4 +88,11 @@ func main() {
 	if err := http.Serve(listener, r); err != nil {
 		log.Fatal("Server has been crashed...")
 	}
+}
+
+func config() *backoff.ExponentialBackOff {
+	back := backoff.NewExponentialBackOff()
+	back.MaxInterval = 20 * time.Second
+	back.Multiplier = 2
+	return back
 }
