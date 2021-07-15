@@ -50,7 +50,6 @@ func initialization() {
 	if portServer == "" {
 		portServer = "8081"
 	}
-	//time.Sleep(2 * time.Second)
 }
 
 func main() {
