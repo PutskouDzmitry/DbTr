@@ -22,7 +22,7 @@ func containsSerialize(str string) bool {
 
 func TestServerBuyNoEqual(t *testing.T) {
 	require := require.New(t)
-	command := `curl http://localhost:8081/buyDubrovsky`
+	command := `curl http://localhost:8081/buy/Dubrovsky`
 	expected := "falsefalse"
 	str := ""
 	for i := 0; i < 5; i++ {
@@ -41,7 +41,7 @@ func TestServerBuyNoEqual(t *testing.T) {
 
 func TestServerBuyEqual(t *testing.T) {
 	require := require.New(t)
-	command := `curl http://localhost:8081/buyDubrovsky`
+	command := `curl http://localhost:8081/buy/Dubrovsky`
 	expected := "truetruetruetruetrue"
 	str := ""
 	for i := 0; i < 5; i++ {
@@ -60,7 +60,7 @@ func TestServerBuyEqual(t *testing.T) {
 
 func TestServerBuyContainsTrue(t *testing.T) {
 	require := require.New(t)
-	command := `curl http://localhost:8081/buyDubrovsky`
+	command := `curl http://localhost:8081/buy/Dubrovsky`
 	str := ""
 	for i := 0; i < 5; i++ {
 		go func() {
@@ -78,8 +78,9 @@ func TestServerBuyContainsTrue(t *testing.T) {
 
 func TestServerBuyNoContainsFalse(t *testing.T) {
 	require := require.New(t)
-	command := `curl http://localhost:8081/buyDubrovsky`
+	command := `curl http://localhost:8081/buy/Dubrovsky`
 	str := ""
+
 	for i := 0; i < 5; i++ {
 		go func() {
 			strCmd := runCommand(command)

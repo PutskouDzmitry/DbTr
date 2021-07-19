@@ -19,11 +19,11 @@ type bookAPI struct {
 func ServeUserResource(r *mux.Router, data data.BookData) {
 	api := &bookAPI{data: &data}
 	r.HandleFunc("/books", api.getAllBooks).Methods("GET")
-	r.HandleFunc("/book{id}", api.getOneBook).Methods("GET")
-	r.HandleFunc("/buy{name}", api.buyBook).Methods("GET")
+	r.HandleFunc("/book/{id}", api.getOneBook).Methods("GET")
+	r.HandleFunc("/buy/{name}", api.buyBook).Methods("GET")
 	r.HandleFunc("/books", api.createBook).Methods("POST")
-	r.HandleFunc("/books{id}/{number}", api.updateBook).Methods("PUT")
-	r.HandleFunc("/books{id}", api.deleteBook).Methods("DELETE")
+	r.HandleFunc("/books/{id}/{number}", api.updateBook).Methods("PUT")
+	r.HandleFunc("/books/{id}", api.deleteBook).Methods("DELETE")
 }
 
 func (a bookAPI) getAllBooks(writer http.ResponseWriter, request *http.Request) {
