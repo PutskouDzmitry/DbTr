@@ -73,7 +73,7 @@ func TestServerBuyContainsTrue(t *testing.T) {
 		}()
 	}
 	time.Sleep(1 * time.Second)
-	require.NotContains("true", str)
+	require.Contains(str, "true")
 }
 
 func TestServerBuyNoContainsFalse(t *testing.T) {
@@ -91,7 +91,7 @@ func TestServerBuyNoContainsFalse(t *testing.T) {
 		}()
 	}
 	time.Sleep(1 * time.Second)
-	require.NotContains("false", true)
+	require.NotContains(str, "false")
 }
 
 func runCommand(command string) string {
