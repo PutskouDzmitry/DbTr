@@ -128,7 +128,6 @@ func (B BookData) BuyBook(name string) (int, error) {
 			tx.Rollback()
 			return fmt.Errorf("your transaction has been canceled and your money is saved, because %v", result.Error)
 		}
-		tx.Commit()
 		return nil
 	}, &sql.TxOptions{Isolation: sql.LevelRepeatableRead})
 	checkResult := strings.Contains(err.Error(), "transaction has already been committed")
