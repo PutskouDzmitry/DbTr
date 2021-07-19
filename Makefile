@@ -15,6 +15,7 @@ db: fmt
 
 .PHONY: image
 image: db ## build image from Dockerfile ./docker/server/Dockerfile
+	@go mod vendor
 	@docker build -t kvarc/task-dbtr:latest .
 
 .PHONY: up
@@ -23,7 +24,7 @@ up : image ## up docker compose
 
 .PHONY: integration
 integration: up
-	@go test --tags=integration ./cmd/server/
+	@go test -v --tags=integration ./cmd/server/
 
 .PHONY: down
 down : integration
